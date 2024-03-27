@@ -1,0 +1,61 @@
+import 'package:employee_app/models/enums.dart';
+import 'package:employee_app/modules/HomeScreen/home_controller.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  final HomeController homeController = Get.put(HomeController());
+  @override
+  void initState() {
+    homeController.getEmployees();
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Home Screen'),
+      ),
+      body:
+      
+      
+       Obx(
+        () => SizedBox(
+          child: homeController.empDataState.value == DataState.loading
+              ? Text('LOADING')
+              : Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: homeController
+                              .userResposne.value.data?.users?.length ??
+                          0,
+                      itemBuilder: (context, index) {
+                        var emp = homeController
+                            .userResposne.value.data?.users?[index];
+                        return Column(
+                          children: [
+                            Text(emp!.userId.toString()),
+                            Text(emp.userEmail.toString()),
+                            Text(emp.userName.toString()),
+                          ],
+                        );
+                      },
+                    )
+                  ],
+                ),
+        ),
+      ),
+    );
+  }
+}
